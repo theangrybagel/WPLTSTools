@@ -6,9 +6,9 @@ No dependencies other than tabulate, which will automatically install when you r
 
 # Install
 ## Linux
-`git clone https://github.com/theangrybagel/WPLTSTools.git`
-`cd WPLTSTools`
-`python Main.py`
+`git clone https://github.com/theangrybagel/WPLTSTools.git`<br>
+`cd WPLTSTools`<br>
+`python Main.py`<br>
 ## Windows
 Be sure that you have python 3.7 or 3.6 installed on your machine.
 <br>
