@@ -1,7 +1,7 @@
-def StrDict(d):
+def StrDict(d, tb=""):
 	txt = ""
 	for x in d:
-		txt += (x + ": " + str(d[x])) + "\n"
+		txt += tb+(x.title() + ": " + str(d[x])) + "\n"
 	txt += ("\n")
 	return txt
 def GetHTML(d, nl="", dv="div"):
@@ -10,7 +10,7 @@ def GetHTML(d, nl="", dv="div"):
 	tab = ""
 	for x in d:
 		if x not in "Name":
-			txt += "{nl}{tab}<br>{nl}{tab}<p>{x}: {dx}</p>".format(nl=nl, x=x, dx=d[x], tab=tab).replace("\n", "<br>")
+			txt += "{nl}{tab}<br>{nl}{tab}<p>{x}: {dx}</p>".format(nl=nl, x=x.title(), dx=d[x], tab=tab).replace("\n", "<br>")
 		else:
 			txt += "{nl}{tab}<br>{nl}{tab}<h3>{dx}</h3>".format(nl=nl, x=x, dx=d[x], tab=tab)
 	txt += "{nl}</{}>".format(dv, nl=nl)

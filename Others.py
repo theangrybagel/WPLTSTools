@@ -1,90 +1,114 @@
 import Lib, random, Thruster
 from Lib import StrDict
+from Lore import Lore
+from math import sqrt
 
 def OneLineFormat(d):
-	txt = d["Name"] + " ("
+	txt = d["name"] + " ("
 	for x in d:
-		if x not in "Name":
+		if x not in "name":
 			txt += x + ": " + d[x] + ", "
 	return txt[:-2] + ")"
 def LifeSupportModule():
 	o = []
-	o.append({"Name": "Gas Dispenser", "Description": "Dispenses a gas of your choice when you want it to. It comes with a canister of low grade tear gas. ", "Price": 8000})
-	o.append({"Name": "Poison Detector", "Description": "Detects hazardous fumes.", "Price": 9000})
-	o.append({"Name": "Air Conditioner I", "Description": "Controls the temperature.", "Price": 3000})
-	o.append({"Name": "Air Conditioner II", "Description": "Controls temperature and humidity.", "Price": 7000})
-	o.append({"Name": "Air Conditioner III", "Description": "Can simulate a wide variety of climates. Acid rain included in this package.", "Price": 32000})
-	o.append({"Name": "Diverse Gas Supply II", "Description": "Provides a wider variety of gas than the Diverse Gas Supply I", "Price": 5000})
-	o.append({"Name": "Fuel Leakage Detector", "Description": "Alerts the captain if there is a fuel leak of some kind. ", "Price": 12000})
-	o.append({"Name": "Gamma Filter", "Description": "Filters out gamma radiation coming through the ship's windows. ", "Price": 19000})
-	o.append({"Name": "Cyrogenic Time Module", "Description": "Can be used to freeze everyone and everything for a desired amount of time. Good for drifting slowly through space when you've run out of fuel and have nothing else to do. ", "Price": 80000})
+	o.append({"name": "Gas Dispenser", "description": "Dispenses a gas of your choice when you want it to. It comes with a canister of low grade tear gas. ", "cost": 8000})
+	o.append({"name": "Poison Detector", "description": "Detects hazardous fumes.", "cost": 9000})
+	o.append({"name": "Air Conditioner I", "description": "Controls the temperature.", "cost": 3000})
+	o.append({"name": "Air Conditioner II", "description": "Controls temperature and humidity.", "cost": 7000})
+	o.append({"name": "Air Conditioner III", "description": "Can simulate a wide variety of climates. Acid rain included in this package.", "cost": 32000})
+	o.append({"name": "Diverse Gas Supply II", "description": "Provides a wider variety of gas than the Diverse Gas Supply I", "cost": 5000})
+	o.append({"name": "Fuel Leakage Detector", "description": "Alerts the captain if there is a fuel leak of some kind. ", "cost": 12000})
+	o.append({"name": "Gamma Filter", "description": "Filters out gamma radiation coming through the ship's windows. ", "cost": 19000})
+	o.append({"name": "Cyrogenic Time Module", "description": "Can be used to freeze everyone and everything for a desired amount of time. Good for drifting slowly through space when you've run out of fuel and have nothing else to do. ", "cost": 80000})
 	return random.choice(o)
 def LifeSupport():
 	names1 = "saftey free air life water sun day".split(" ")
 	names2 = "breather infuser emitter giver maker smeller sniffer".split(" ")
 	name = random.choice(names1) + random.choice(names2)
 	slots = random.randrange(4, 12)
-	thing = {"Name": name, "Module Slots": str(slots)}
-	thing["Module 1"] = "Basic Gravitational Control Module"
-	thing["Module 2"] = "Diverse Gas Supply I"
-	modules = []
+	thing = {"name": name, "module Slots": str(slots)}
 	moduleefficiency = random.randrange(20, 100)/100
-	thing["Module Efficiency"] = moduleefficiency
+	thing["module efficiency"] = moduleefficiency
+	thing["module 1"] = "Basic Gravitational Control Module"
+	thing["module 2"] = "Diverse Gas Supply I"
+	modules = []
 	cost = 25000
 	for x in range(slots-2):
 		if random.choice([True, False, False, False]):
 			m = LifeSupportModule()
 			modules.append(m)
-			thing["Module {}".format(x+3)] = m['Name'] + " - " + m["Description"]
-			cost += m['Price'] + 1000 * moduleefficiency
+			thing["module {}".format(x+3)] = m['name'] + " - " + m["description"]
+			cost += m['cost'] + 1000 * moduleefficiency
 		else:
-			thing["Module {}".format(x+3)] = "Empty"
+			thing["module {}".format(x+3)] = "Empty"
 			cost += 4000 * moduleefficiency
-	thing["Cost"] = cost
+	thing["cost"] = cost
 	return thing
 def GetThruster(t):
 	th = None
 	while th == None:
 		a = Thruster.GetThruster()
-		if a["Type"] == t:
+		if a["type"] == t:
 			th = a
 	return th
-def ShipBody(name, mass, cost, FC, ICC, clss, WC, HLT=2, LLT=2, GT=8):
-	return {"Name": name, "Mass": mass, "Cost": cost, "FC": FC, "ICC": ICC, "Class": clss, "WC": WC, "HLT": HLT, "LLT":LLT, "GT":GT}
+
 def ShipWeapon():
 	names1 = "death star planet dust gas juice pan bee coal fire bag weasle sea dirt floor sand space nail cream wealth knife cannon beef police train wack face life bag rain snow frisbee coal".split(" ")
 	names2 = "killer shooter ruiner spewer fighter gun blaster launcher sender maker vaporizer zapper".split(" ")
 	name = random.choice(names1) + random.choice(names2)
-	thing = {"Name": name}
+	weaponclass = random.choice("B F C R W".split(" "))
+
+	thing = {"name": name, "class": weaponclass}
 	return thing
-def ShipPlating():
-	return
 def NavSystem():
+	commdist = random.range(10, 100)
 	return
 def FuelBay():
 	return
+def GetShipWeapon(t):
+	wpn = None
+	while wpn == None:
+		a = ShipWeapon()
+		if a['class'] == t:
+			wpn = a
+	return wpn
 
 def ShipGenerator():
-	bodies = []
-	bodies.append(ShipBody("FK-23", 3900, 897000, 12, 4.75, "A", "WWB"))
-	bodies.append(ShipBody("HAT-46", 5400, 324000, 14, 6.5, "B", "FFWW"))
-	bodies.append(ShipBody("VX-92", 4300, 468000, 11, 4, "D", "WWWW", LLT=4, GT=10))
-	bodies.append(ShipBody("PCF-97", 8500, 233000, 10, 5, "R", "FFWW", HLT=4))
 	ship = {}
-	body = random.choice(bodies)
-	ship["Body"] = body["Name"]
-	lifesupport = LifeSupport()
-	ship["Life Support"] = StrDict(lifesupport)
-	cost = body["Cost"] + lifesupport["Cost"]
 	hthrusters = GetThruster("High level thrusters")
 	lthrusters = GetThruster("Low level thrusters")
-	for x in range(body["HLT"]):
-		ship["High Level Thruster {}".format(x+1)] = StrDict(hthrusters)
-		cost += hthrusters["Cost"]
-	for x in range(body["LLT"]):
-		ship["Low Level Thruster {}".format(x+1)] = StrDict(lthrusters)
-		cost += lthrusters["Cost"]
-	ship["Cost"] = cost
+	plating = random.choice(Lore.Materials.shiparmor)
+	lowlevelspeed = 0
+	highlevelspeed = 0
+	body = random.choice(Lore.bodies)
+	mass = body["mass"] + plating["mass"]*body["plating"]
+	ship["body"] = body["name"]
+	ship["plating"] = plating["name"]
+	ship["weapons class"] = body["wc"]
+	lifesupport = LifeSupport()
+	cost = body["cost"] + lifesupport["cost"]
+	lowlevelspeed += lthrusters["speed"]*body['llt']
+	highlevelspeed += hthrusters["speed"]*body['hlt']
+	mass += lthrusters["mass"]*body['llt'] + hthrusters["mass"]*body['hlt']
+	ship["low level speed"] = lowlevelspeed / sqrt(.0005*mass)
+	ship["high level speed"] = highlevelspeed / sqrt(.0005*mass)
+	cost += hthrusters["cost"] * body["hlt"]
+	cost += lthrusters["cost"] * body["llt"]
+	cost += ship["low level speed"]*100 + ship["high level speed"]*100
+	ship["micro yorks per low level unit"] = lthrusters['distance per unit']*body['llt']
+	ship["yorks per high level unit"] = hthrusters['distance per unit']*body['hlt']
+	wpns = {"B":0, "F":0, "C":0, "R":0, "W":0}
+	for x in body['wc']:
+		wpns[x] += 1
+		wpn = GetShipWeapon(x)
+		ship["Weapon {} {}".format(x, wpns[x])] = "\n"+StrDict(wpn, tb="    ")
+
+
+	ship["total cost"] = cost
+	
+	ship["life support"] = "\n"+StrDict(lifesupport, tb="    ")
+	ship["high level thrusters"] = "\n"+StrDict(hthrusters, tb="    ")
+	ship["low level thrusters"] = "\n"+StrDict(lthrusters, tb="    ")
 	return ship
 
 
