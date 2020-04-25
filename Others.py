@@ -54,17 +54,33 @@ def GetThruster(t):
 
 def ShipWeapon():
 	names1 = "death star planet dust gas juice pan bee coal fire bag weasle sea dirt floor sand space nail cream wealth knife cannon beef police train wack face life bag rain snow frisbee coal".split(" ")
-	names2 = "killer shooter ruiner spewer fighter gun blaster launcher sender maker vaporizer zapper".split(" ")
+	names2 = "killer shooter ruiner spewer fighter knotter gun blaster launcher sender maker vaporizer zapper".split(" ")
 	name = random.choice(names1) + random.choice(names2)
 	weaponclass = random.choice("B F C R W".split(" "))
-
-	thing = {"name": name, "class": weaponclass}
+	damage = random.randrange(3, 30)
+	cost = 0
+	cost += damage*200
+	firerate = random.randrange(1, 900)/100
+	cost *= firerate
+	mass = random.randrange(50, 200)
+	thing = {"name": name, "class": weaponclass, "damage": damage, "firerate": firerate, "mass": mass}
 	return thing
 def NavSystem():
 	commdist = random.range(10, 100)
 	return
-def FuelBay():
-	return
+def FuelBay(targetsize, t):
+	typelist = Lore.Fuels.low
+	if t.upper().startswith("H"):
+		typelist = Lore.Fuels.high
+	supportedTypes = [random.choice(typelist)["name"]]
+	for x in range(random.randrange(0, 3)):
+		ft = random.choice(typelist)['name']
+		if ft not in supportedTypes:
+			supportedTypes.append(ft)
+	thing = {"capacity": targetsize, "supported fuel": ""}
+	for x in supportedTypes:
+		thing["supported fuel"] += x + " "
+	return thing
 def GetShipWeapon(t):
 	wpn = None
 	while wpn == None:
@@ -74,7 +90,9 @@ def GetShipWeapon(t):
 	return wpn
 
 def ShipGenerator():
-	ship = {}
+	n1 = "death star planet sour dust gas juice pan bee coal bag weasle sea dirt floor sand space nail cream wealth knife cannon beef police train fire wack face life bag rain snow frisbee coal".split(" ")
+	n2 = "speeder fighter eagle parrot genguin sparrow goose fisher duck bird jet skimmer glider ship wing yacht boat lugger vessel sailer mobile falcon".split(" ")
+	ship = {"name": random.choice(n1).title() + random.choice(n2)}
 	hthrusters = GetThruster("High level thrusters")
 	lthrusters = GetThruster("Low level thrusters")
 	plating = random.choice(Lore.Materials.shiparmor)
@@ -101,11 +119,13 @@ def ShipGenerator():
 	for x in body['wc']:
 		wpns[x] += 1
 		wpn = GetShipWeapon(x)
+		mass += wpn["mass"]
 		ship["Weapon {} {}".format(x, wpns[x])] = "\n"+StrDict(wpn, tb="    ")
-
-
+	ship["low level fuel bay"] = FuelBay(random.randrange(int(body["fc"]*.25*100), int(body["fc"]*.75*100))/100, "Low Level")
+	ship["high level fuel bay"] = FuelBay(body["fc"]-ship["low level fuel bay"]["capacity"], "High Level")
+	ship["total mass"] = mass
 	ship["total cost"] = cost
-	
+
 	ship["life support"] = "\n"+StrDict(lifesupport, tb="    ")
 	ship["high level thrusters"] = "\n"+StrDict(hthrusters, tb="    ")
 	ship["low level thrusters"] = "\n"+StrDict(lthrusters, tb="    ")

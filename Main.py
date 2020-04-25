@@ -24,7 +24,7 @@ def Generate(args):
 		for x in range(args['times']):
 			generated = sources[source]()
 			if args['h']:
-				print(GetHTML(generated))
+				print(GetHTML(generated).replace("    ", "&emsp;"))
 			else:
 				print(StrDict(generated))
 
