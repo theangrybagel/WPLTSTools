@@ -58,20 +58,28 @@ def GetThruster(t):
 			th = a
 	return th
 def GetShield():
+	names1= "death star planet dust gas juice pan bee coal fire bag weasle sea side dirt floor sand space nail cream safe wealth knife cannon beef police train wack face life bag rain snow frisbee coal"
+	names2 = "stopper taker eater protector blocker wall warder parrier deflector reflector thwarter defender guarder guardian"
 	mindamage = random.randrange(1, 6)
+	health = random.randrange(70, 240)
+	cost = mindamage*100+health*30
+	thing = {""}
 def ShipWeapon():
-	names1 = "death star planet dust gas juice pan bee coal fire bag weasle sea dirt floor sand space nail cream wealth knife cannon beef police train wack face life bag rain snow frisbee coal".split(" ")
-	names2 = "killer shooter ruiner spewer fighter knotter gun blaster launcher sender maker vaporizer zapper".split(" ")
+	names1 = "death star planet dust gas juice pan bee coal fire bag weasle sea side dirt floor sand space nail cream wealth knife cannon beef police train wack face life bag rain snow frisbee coal".split(" ")
+	names2 = "killer shooter ruiner caller teller finder spewer fighter winder bomber knotter gun blaster launcher sender maker vaporizer zapper".split(" ")
 	name = (random.choice(names1) + random.choice(names2)).title()
 	weaponclass = random.choice("B F C R W".split(" "))
 	damage = random.randrange(3, 30)
+	damagerange = random.randrange(3, 15)
 	cost = 0
 	cost += damage*200
+	accuracy = random.randrange(1, 18)
 	idlepower = random.randrange(5, 100)/100
-	firerate = random.randrange(1, 900)/100
-	cost *= firerate
+	firerate = random.randrange(damage*15, 900)/100
+	cost -= firerate*100
+	cost += accuracy*accuracy*50
 	mass = random.randrange(50, 200)
-	thing = {"name": name, "class": weaponclass, "damage": damage, "firerate": firerate, "mass": mass, "running power": idlepower}
+	thing = {"name": name, "class": weaponclass, "cost":cost, "damage": str(damage)+"-"+str(damage+damagerange), "accuracy": accuracy, "firerate": firerate, "mass": mass, "running power": idlepower}
 	return thing
 def NavSystem():
 	commdist = random.randrange(10, 100)
@@ -137,6 +145,7 @@ def ShipGenerator():
 		wpn = GetShipWeapon(x)
 		powerneeded += wpn["running power"]
 		mass += wpn["mass"]
+		cost += wpn["cost"]
 		ship["Weapon {} {}".format(x, wpns[x])] = "\n"+StrDict(wpn, tb="    ")
 	ship["low level fuel bay"] = FuelBay(random.randrange(int(body["fc"]*.25*100), int(body["fc"]*.75*100))/100, "Low Level")
 	ship["high level fuel bay"] = "\n"+StrDict(FuelBay(body["fc"]-ship["low level fuel bay"]["capacity"], "High Level"), tb="    ")
