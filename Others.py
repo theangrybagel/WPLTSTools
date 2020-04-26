@@ -58,12 +58,15 @@ def GetThruster(t):
 			th = a
 	return th
 def GetShield():
-	names1= "death star planet dust gas juice pan bee coal fire bag weasle sea side dirt floor sand space nail cream safe wealth knife cannon beef police train wack face life bag rain snow frisbee coal"
-	names2 = "stopper taker eater protector blocker wall warder parrier deflector reflector thwarter defender guarder guardian"
+	names1= "death star planet plasma bullet dust skin dust gas juice pan bee coal fire bag weasle sea side dirt floor sand space nail cream safe wealth knife cannon beef police train wack face life bag rain snow frisbee coal"
+	names2 = "stopper shield shielder taker eater protector blocker wall warder parrier deflector reflector thwarter defender guarder guardian"
 	mindamage = random.randrange(1, 6)
 	health = random.randrange(70, 240)
-	cost = mindamage*100+health*30
-	thing = {""}
+	power = health/(15-mindamage)
+	mass = power*health/10
+	cost = mindamage*100+health*30+random.randrange(500, 2000)
+	thing = {"name": (random.choice(names1)+random.choice(names2)).title(), "minimum damage": mindamage, "health": health, "power":power, "mass": mass, "cost": cost}
+	return thing
 def ShipWeapon():
 	names1 = "death star planet dust gas juice pan bee coal fire bag weasle sea side dirt floor sand space nail cream wealth knife cannon beef police train wack face life bag rain snow frisbee coal".split(" ")
 	names2 = "killer shooter ruiner caller teller finder spewer fighter winder bomber knotter gun blaster launcher sender maker vaporizer zapper".split(" ")
@@ -140,25 +143,32 @@ def ShipGenerator():
 	ship["micro yorks per low level unit"] = lthrusters['distance per unit']*body['llt']
 	ship["yorks per high level unit"] = hthrusters['distance per unit']*body['hlt']
 	wpns = {"B":0, "F":0, "C":0, "R":0, "W":0}
+	weaponsmade = {}
 	for x in body['wc']:
 		wpns[x] += 1
 		wpn = GetShipWeapon(x)
 		powerneeded += wpn["running power"]
 		mass += wpn["mass"]
 		cost += wpn["cost"]
-		ship["Weapon {} {}".format(x, wpns[x])] = "\n"+StrDict(wpn, tb="    ")
-	ship["low level fuel bay"] = FuelBay(random.randrange(int(body["fc"]*.25*100), int(body["fc"]*.75*100))/100, "Low Level")
-	ship["high level fuel bay"] = "\n"+StrDict(FuelBay(body["fc"]-ship["low level fuel bay"]["capacity"], "High Level"), tb="    ")
-	ship["low level fuel bay"] = "\n"+StrDict(ship["low level fuel bay"], tb="    ")
+		weaponsmade["Weapon {}{}".format(x, wpns[x])] = "\n"+StrDict(wpn, tb="    ")
+
+	shield = GetShield()
+	powerneeded += shield["power"]
+	cost += shield["cost"]
 	pg = PowerGenerator(powerneeded)
 	cost += pg["cost"]
 	mass += pg["mass"]
-	ship["power generator"] = "\n"+StrDict(pg, tb="    ")
+	
 	ship["total mass"] = mass
 	ship["total cost"] = cost
+	for x in weaponsmade:
+		ship[x] = weaponsmade[x]
+	ship["low level fuel bay"] = FuelBay(random.randrange(int(body["fc"]*.25*100), int(body["fc"]*.75*100))/100, "Low Level")
+	ship["high level fuel bay"] = "\n"+StrDict(FuelBay(body["fc"]-ship["low level fuel bay"]["capacity"], "High Level"), tb="    ")
+	ship["low level fuel bay"] = "\n"+StrDict(ship["low level fuel bay"], tb="    ")
+	ship["shield generator"] = "\n"+StrDict(shield, tb="    ")
+	ship["power generator"] = "\n"+StrDict(pg, tb="    ")
 	ship["life support"] = "\n"+StrDict(lifesupport, tb="    ")
 	ship["high level thrusters"] = "\n"+StrDict(hthrusters, tb="    ")
 	ship["low level thrusters"] = "\n"+StrDict(lthrusters, tb="    ")
 	return ship
-
-

@@ -147,7 +147,7 @@ class Run:
 	def GetInput(self):
 		a = ""
 		while True:
-			a = input("> ")
+			a = input("> ").strip()
 			if a == "":
 				continue
 			print("\n")
@@ -168,13 +168,9 @@ class Run:
 			for a in x.aliases:
 				self.cmddict[a] = x
 		while True:
-			a = self.GetInput()
-			
+			a = self.GetInput()	
 			if a.lower() in ["exit", "quit", "stop"]:
 				break
 			cmd = a.split(" ")[0]
 			if cmd in self.cmddict:
 				self.cmddict[cmd].Call(a)
-
-
-
